@@ -1,0 +1,20 @@
+# executáveis
+*.exe
+*.out
+
+# objetos compilados
+*.o
+*.obj
+
+# pastas de build
+build/
+
+# arquivos temporários
+*.tmp
+*.log
+
+# vscode
+.vscode/
+
+# dados de teste
+*.txt
