@@ -2,14 +2,16 @@
 #define PT_BR_TOOLKIT_H
 
 typedef struct no{
-    char palavra[100];
+    char *dado;
+    struct no *anterior;
     struct no *proximo;
-}Texto;
+    int altura;
+    int fator;
+}Node;
 
-
+//string
 void normaliza_palavra(char palavra[]);//normaliza para ascii minusculo.
 void remove_acentos(char palavra[]);//remove chars acentuados.
-void arquivo_para_texto(Texto **texto, char arquivo[]);
-void init_tool_kit();
-
+//matematicas
+unsigned long int faz_primo(unsigned long int valor);
 #endif // PT_BR_TOOLKIT_H
