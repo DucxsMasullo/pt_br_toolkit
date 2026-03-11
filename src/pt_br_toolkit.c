@@ -4,6 +4,9 @@
 #include<ctype.h>
 #include<math.h>
 #include"pt_br_toolkit.h"
+
+
+
 //strings
 static const char mapa_acentos[64] = {
     'a','a','a','a','a',0,0,'c',

@@ -9,6 +9,10 @@ typedef struct no{
     int fator;
 }Node;
 
+//STX = 2
+//ETX = 3 dec start e end
+//[STX][TIPO][dado][dado][dado][dado][ETX]
+
 //string
 void normaliza_palavra(char palavra[]);//normaliza para ascii minusculo.
 void remove_acentos(char palavra[]);//remove chars acentuados.
