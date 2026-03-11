@@ -76,13 +76,34 @@ Node* cria_novo_node(void){
 }
 
 void insere_dado_node(Node *current, char forma[],void *dado){
-    if(forma[0] == 'd'){
-        int i = *(int*)dado;
-        void *temp = calloc(1, sizeof(i)+2);
-        ((char*)temp)[0] = 2;
-        ((char*)temp)[1] = 'd';
-        memcpy(((char*)temp)+2,&i,sizeof(i));
-        current->dado = temp;
+    int size;
+    switch(forma[0]){
+        case 'd':
+        size = sizeof(int);
+        break;
+        case 'f':
+        size = sizeof(float);
+        break;
+        case 'c':
+        size = sizeof(char);
+        break;
+        case 's':
+        size = strlen(dado);
+        break;
+    }
+
+    void *temp = calloc(1, size+3);
+    ((char*)temp)[0] = 2;
+    ((char*)temp)[1] = forma[0];
+    ((char*)temp)[size+2] = 3;
+    memcpy(((char*)temp)+2,dado,size);
+    current->dado = temp;
+}
+
+void le_dado_node(Node *current){
+    if(((char*)current->dado)[0] == 2){
+        printf("welwel");
+        int i = 4;
     }
 }
 //pilhas
