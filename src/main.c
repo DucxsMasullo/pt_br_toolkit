@@ -1,12 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include<string.h>
 #include "pt_br_toolkit.h"
 
 int main() {
-    unsigned char teste = 0;
-    for(int i = 0;i <= 255;i++){
-        teste = i;
-        printf("%c valor : %d  tamanho:%d\n", teste, teste,sizeof(teste));
+    Node *head = NULL;
+    int i = 99;
+    int w = 0;
+    head = cria_novo_node();
+    insere_dado_node(head,"d",&i);
 
-    }
+
+    memcpy(&w,((char*)head->dado)+2,sizeof(int));
+    printf("dado %d",w);
+    scanf("%d", &i);
 }

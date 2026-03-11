@@ -63,9 +63,28 @@ unsigned long int faz_primo(unsigned long int valor){
     }
     return valor;
 }
+//conversores
 
 //listas
+Node* cria_novo_node(void){
+    Node *newnode = calloc(1, sizeof(Node));
+    if(newnode == NULL){
+        printf("\n erro ao alocar");
+        exit(EXIT_FAILURE);
+    }
+    return newnode;
+}
 
+void insere_dado_node(Node *current, char forma[],void *dado){
+    if(forma[0] == 'd'){
+        int i = *(int*)dado;
+        void *temp = calloc(1, sizeof(i)+2);
+        ((char*)temp)[0] = 2;
+        ((char*)temp)[1] = 'd';
+        memcpy(((char*)temp)+2,&i,sizeof(i));
+        current->dado = temp;
+    }
+}
 //pilhas
 
 //filas
