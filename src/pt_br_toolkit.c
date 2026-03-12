@@ -63,6 +63,15 @@ unsigned long int faz_primo(unsigned long int valor){
     }
     return valor;
 }
+unsigned long long int completa_byte(unsigned long long int valor){
+    unsigned long long int novo = valor;
+    if(novo % 8 == 0){
+        return valor += 8;
+    }
+    else{
+        return valor += (8 - (novo % 8));
+    }
+}
 //conversores
 
 //listas
@@ -76,7 +85,9 @@ Node* cria_novo_node(void){
 }
 
 void insere_dado_node(Node *current, char forma[],void *dado){
-    int size;
+    unsigned long int size;
+    unsigned long int previous_size = 0;
+    unsigned long int size_onbyte;
     switch(forma[0]){
         case 'd':
         size = sizeof(int);
@@ -91,20 +102,52 @@ void insere_dado_node(Node *current, char forma[],void *dado){
         size = strlen(dado);
         break;
     }
+    if(current->dado != NULL){
+        previous_size = tamanho_dado_node (current);
+    }
+    size_onbyte = completa_byte(size+sizeof(long int)+2 + previous_size);
+    void *temp = calloc(1, size_onbyte);
 
-    void *temp = calloc(1, size+3);
-    ((char*)temp)[0] = 2;
-    ((char*)temp)[1] = forma[0];
-    ((char*)temp)[size+2] = 3;
-    memcpy(((char*)temp)+2,dado,size);
-    current->dado = temp;
+
+
+     //consetar as condicionais aqui
+
+    ((char*)temp)[0+previous_size] = 2;
+    ((char*)temp)[1+previous_size] = forma[0];
+    memcpy((char*)temp + 2 + previous_size, &size, sizeof(long int));
+    memcpy((char*)temp + 2 + sizeof(long int)+previous_size,dado,size)
 }
 
 void le_dado_node(Node *current){
-    if(((char*)current->dado)[0] == 2){
-        printf("welwel");
-        int i = 4;
+    int cntrl = 0;
+    while(((char*)current->dado)[cntrl] == 2){
+        switch(((char*)current->dado)[cntrl + 1]){
+            case 'd':
+            printf("%d",*(int*)((char*)current->dado + 2 + sizeof(long int)+cntrl));
+            break;
+            case 'f':
+            printf("%f",*(float*)((char*)current->dado + 2 + sizeof(long int)+cntrl));
+            break;
+            case 'c':
+            printf("%c",((char*)current->dado)[2+sizeof(long int)+cntrl]);
+            break;
+            case 's':
+            printf("%s",((char*)current->dado + 2 + sizeof(long int)+cntrl));
+            break;
+        }
+        cntrl = (*(int*)((char*)current->dado + 2)+2+sizeof(long int));
     }
+}
+
+int tamanho_dado_node(Node *current){
+    unsigned long int size = 0;
+    int cntrl = 0;
+    while(((char*)current->dado)[cntrl] != 0){
+        size += *(int*)((char*)current->dado + 2);
+        size += 2;
+        cntrl = cntrl + 2 + (*(int*)((char*)current->dado +2 ));
+    }
+    return size;
 }
 //pilhas
 
