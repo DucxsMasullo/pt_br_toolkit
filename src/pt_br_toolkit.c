@@ -107,15 +107,18 @@ void insere_dado_node(Node *current, char forma[],void *dado){
     }
     size_onbyte = completa_byte(size+sizeof(long int)+2 + previous_size);
     void *temp = calloc(1, size_onbyte);
+    if(current->dado != NULL){
+        memcpy(temp,current->dado, previous_size);
+        free(current->dado);
+        previous_size++;
+    }
 
-
-
-     //consetar as condicionais aqui
 
     ((char*)temp)[0+previous_size] = 2;
     ((char*)temp)[1+previous_size] = forma[0];
     memcpy((char*)temp + 2 + previous_size, &size, sizeof(long int));
-    memcpy((char*)temp + 2 + sizeof(long int)+previous_size,dado,size)
+    memcpy((char*)temp + 2 + sizeof(long int) + previous_size,dado,size);
+    current->dado = temp;
 }
 
 void le_dado_node(Node *current){
@@ -123,19 +126,19 @@ void le_dado_node(Node *current){
     while(((char*)current->dado)[cntrl] == 2){
         switch(((char*)current->dado)[cntrl + 1]){
             case 'd':
-            printf("%d",*(int*)((char*)current->dado + 2 + sizeof(long int)+cntrl));
+            printf("%d",*(int*)((char*)current->dado + 2 + sizeof(long int) + cntrl));
             break;
             case 'f':
-            printf("%f",*(float*)((char*)current->dado + 2 + sizeof(long int)+cntrl));
+            printf("%f",*(float*)((char*)current->dado + 2 + sizeof(long int) + cntrl));
             break;
             case 'c':
-            printf("%c",((char*)current->dado)[2+sizeof(long int)+cntrl]);
+            printf("%c",((char*)current->dado)[2+sizeof(long int) + cntrl]);
             break;
             case 's':
-            printf("%s",((char*)current->dado + 2 + sizeof(long int)+cntrl));
+            printf("%s",((char*)current->dado + 2 + sizeof(long int) + cntrl));
             break;
         }
-        cntrl = (*(int*)((char*)current->dado + 2)+2+sizeof(long int));
+        cntrl += (*(int*)((char*)current->dado + 2+cntrl)+2+sizeof(long int));
     }
 }
 
@@ -143,9 +146,8 @@ int tamanho_dado_node(Node *current){
     unsigned long int size = 0;
     int cntrl = 0;
     while(((char*)current->dado)[cntrl] != 0){
-        size += *(int*)((char*)current->dado + 2);
-        size += 2;
-        cntrl = cntrl + 2 + (*(int*)((char*)current->dado +2 ));
+        size += (*(int*)((char*)current->dado + 2))+2+sizeof(long int);
+        cntrl = sizeof(long int) + cntrl + 2 + (*(int*)((char*)current->dado + 2));
     }
     return size;
 }
