@@ -6,11 +6,11 @@
 int main() {
     Node *head = NULL;
     int i = 1;
-    int w = 9;
+    char w[] = "casa";
 
     head = cria_novo_node();
     insere_dado_node(head,"d",&i);
-    insere_dado_node(head,"d",&w);
+    insere_dado_node(head,"s",&w);
 
 
     le_dado_node(head);

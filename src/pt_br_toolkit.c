@@ -53,6 +53,7 @@ void normaliza_palavra(char palavra[]){
         }
     }
 }
+
 //matematicas
 unsigned long int faz_primo(unsigned long int valor){
     for(int i=2; i*i<=valor; i++){
@@ -63,7 +64,8 @@ unsigned long int faz_primo(unsigned long int valor){
     }
     return valor;
 }
-unsigned long long int completa_byte(unsigned long long int valor){
+
+unsigned long long int completa_qword(unsigned long long int valor){
     unsigned long long int novo = valor;
     if(novo % 8 == 0){
         return valor += 8;
@@ -72,9 +74,19 @@ unsigned long long int completa_byte(unsigned long long int valor){
         return valor += (8 - (novo % 8));
     }
 }
-//conversores
 
-//listas
+int tamanho_dado_node(Node *current){
+    unsigned long int size = 0;
+    int cntrl = 0;
+    void *aux = current->dado;
+    while(((char*)aux)[cntrl]!= '\0'){
+        size += 2 + sizeof(long int) + *(int*)(aux +2);
+        cntrl += 2 + sizeof(long int) + *(int*)(aux +2);
+    }
+    return size;
+}
+
+//conversores
 Node* cria_novo_node(void){
     Node *newnode = calloc(1, sizeof(Node));
     if(newnode == NULL){
@@ -105,12 +117,11 @@ void insere_dado_node(Node *current, char forma[],void *dado){
     if(current->dado != NULL){
         previous_size = tamanho_dado_node (current);
     }
-    size_onbyte = completa_byte(size+sizeof(long int)+2 + previous_size);
+    size_onbyte = completa_qword(size + sizeof(long int) + 2 + previous_size);
     void *temp = calloc(1, size_onbyte);
     if(current->dado != NULL){
         memcpy(temp,current->dado, previous_size);
         free(current->dado);
-        previous_size++;
     }
 
 
@@ -142,15 +153,35 @@ void le_dado_node(Node *current){
     }
 }
 
-int tamanho_dado_node(Node *current){
-    unsigned long int size = 0;
-    int cntrl = 0;
-    while(((char*)current->dado)[cntrl] != 0){
-        size += (*(int*)((char*)current->dado + 2))+2+sizeof(long int);
-        cntrl = sizeof(long int) + cntrl + 2 + (*(int*)((char*)current->dado + 2));
+//listas
+void torna_node_proximo(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
     }
-    return size;
+    else{
+        (*root)->proximo = current;
+    }
 }
+
+void torna_node_anterior(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
+    }
+    else{
+        (*root)->anterior = current;
+    }
+}
+
+void troca_node_proximo(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
+    }
+    else{
+        current->proximo = (*root)->proximo;
+        (*root)->proximo = current;
+    }
+}
+
 //pilhas
 
 //filas
