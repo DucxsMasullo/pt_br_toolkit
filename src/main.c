@@ -5,14 +5,12 @@
 
 int main() {
     Node *head = NULL;
-    int i = 1;
-    char w[] = "casa";
+    int cntrl = 0;
+    int data;
+    char buffer[50];
 
-    head = cria_novo_node();
-    insere_dado_node(head,"d",&i);
-    insere_dado_node(head,"s",&w);
+    
 
 
-    le_dado_node(head);
-    scanf("%d", &w);
+    scanf("%d", &cntrl);
 }

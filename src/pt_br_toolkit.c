@@ -96,6 +96,13 @@ Node* cria_novo_node(void){
     return newnode;
 }
 
+void deleta_node(Node *current){
+    if(current->dado != NULL){
+        free(current->dado);
+    }
+    free(current);
+}
+
 void insere_dado_node(Node *current, char forma[],void *dado){
     unsigned long int size;
     unsigned long int previous_size = 0;
@@ -181,6 +188,71 @@ void troca_node_proximo(Node **root, Node *current){
         (*root)->proximo = current;
     }
 }
+
+void troca_node_proximo_lde(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
+    }
+    else{
+        current->proximo = (*root)->proximo;
+        (*root)->proximo = current;
+        current->anterior = *root;
+        if(current->proximo != NULL){
+            current->proximo->anterior = current;
+        }
+    }
+}
+
+void remove_node_proximo(Node **root){
+    if((*root)->proximo != NULL){
+        Node *remover = (*root)->proximo;
+        (*root)->proximo = (*root)->proximo->proximo;
+        deleta_node(remover);
+    }
+    else{
+        return;
+    }
+    if((*root)->proximo->anterior != NULL){
+        (*root)->proximo->anterior = *root;
+    }
+}
+
+void troca_head(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
+    }
+    else{
+        current->proximo = *root;
+        *root = current;
+    }
+}
+
+void troca_head_lde(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
+    }
+    else{
+        current->proximo = *root;
+        (*root)->anterior = current;
+        *root = current;
+    }
+}
+
+void remove_head(Node **root){
+    if(*root != NULL){
+        if((*root)->proximo != NULL){
+            Node *remover = *root;
+            *root = (*root)->proximo;
+            deleta_node(remover);
+        }
+        else{
+            deleta_node(*root);
+            *root = NULL;
+        }
+    }
+}
+
+
 
 //pilhas
 

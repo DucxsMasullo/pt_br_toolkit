@@ -30,5 +30,20 @@ void insere_dado_node(Node *current, char forma[],void *dado);//recebe o note al
 
 void le_dado_node(Node *current);//autoexplicativo
 
+//lista
+void torna_node_proximo(Node **root, Node *current);
+
+void torna_node_anterior(Node **root, Node *current);
+
+void troca_node_proximo(Node **root, Node *current);
+
+void troca_node_proximo_lde(Node **root, Node *current);
+
+void troca_head(Node **root, Node *current);
+
+void troca_head_lde(Node **root, Node *current);
+
+void remove_head(Node **root);
+
 
 #endif // PT_BR_TOOLKIT_H
