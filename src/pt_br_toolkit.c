@@ -8,6 +8,7 @@
 
 
 //strings
+
 static const char mapa_acentos[64] = {
     'a','a','a','a','a',0,0,'c',
     'e','e','e','e','i','i','i','i',
@@ -54,7 +55,13 @@ void normaliza_palavra(char palavra[]){
     }
 }
 
+void limpa_buffer(void){
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 //matematicas
+
 unsigned long int faz_primo(unsigned long int valor){
     for(int i=2; i*i<=valor; i++){
         if(valor%i == 0){
@@ -87,6 +94,7 @@ int tamanho_dado_node(Node *current){
 }
 
 //conversores
+
 Node* cria_novo_node(void){
     Node *newnode = calloc(1, sizeof(Node));
     if(newnode == NULL){
@@ -160,7 +168,36 @@ void le_dado_node(Node *current){
     }
 }
 
+void placeholder(void){
+    return; ///preciso fazer um extrator de dado int para comparar os dados na arvore.
+}
+
+int retorna_int_node(Node *current, int pos){
+    if(current == NULL){
+        exit(EXIT_FAILURE);
+    }
+
+
+    int cntrl = 0;
+    int actualpos = 0;
+    while(((char*)current->dado)[cntrl] == 2){
+        switch(((char*)current->dado)[cntrl + 1]){
+            case 'd':
+            actualpos++;
+            if(actualpos == pos){
+                return *(int*)((char*)current->dado + 2 + sizeof(long int) + cntrl);
+            }
+            break;
+
+            default:
+            break;
+        }
+        cntrl += (*(int*)((char*)current->dado + 2+cntrl)+2+sizeof(long int));
+    }
+}
+
 //listas
+
 void torna_node_proximo(Node **root, Node *current){
     if(*root == NULL){
         *root = current;
@@ -253,11 +290,164 @@ void remove_head(Node **root){
 }
 
 
-
 //pilhas
 
+void push(Node **root,char forma[]){
+    void *dado = NULL;
+    Node *current = cria_novo_node();
+
+    switch(forma[0]){
+        case 's':
+        char buffer[100];
+        printf("\n insira string:");
+        fgets(buffer,sizeof(buffer),stdin);
+        dado = buffer;
+        break;
+
+        case 'd':
+        int inteiro;
+        printf("\ninsira inteiro:");
+        scanf("%d",&inteiro);
+        limpa_buffer();
+        dado = &inteiro;
+        break;
+
+        case 'f':
+        float decimal;
+        printf("\ninsira decimal:");
+        scanf("%f",&decimal);
+        limpa_buffer();
+        dado = &decimal;
+        break;
+
+        case 'c':
+        char caractere;
+        printf("\n insira um caractere:");
+        scanf("%c",&caractere);
+        limpa_buffer();
+        dado = &caractere;
+        break;
+
+        default:
+        exit(EXIT_FAILURE);
+    }
+
+    insere_dado_node(current, forma, dado);
+    troca_head(root,current);
+}
+
+void* pop(Node **root){
+    if(*root == NULL){
+        exit(EXIT_FAILURE);
+    }
+    int size = tamanho_dado_node(*root);
+    void *dados = calloc(1, size);
+    memcpy(dados,(*root)->dado,size);
+    remove_head(root);
+    return dados;
+}
+
+void* peek(Node **root){
+    if(*root == NULL){
+        exit(EXIT_FAILURE);
+    }
+    int size = tamanho_dado_node(*root);
+    void *dados = calloc(1, size);
+    memcpy(dados,(*root)->dado,size);
+    return dados;
+}
 //filas
+void enqueue(Node **root,char forma[]){
+    void *dado = NULL;
+    Node *current = cria_novo_node();
+
+    switch(forma[0]){
+        case 's':
+        char buffer[100];
+        printf("\n insira string:");
+        fgets(buffer,sizeof(buffer),stdin);
+        dado = buffer;
+        break;
+
+        case 'd':
+        int inteiro;
+        printf("\ninsira inteiro:");
+        scanf("%d",&inteiro);
+        limpa_buffer();
+        dado = &inteiro;
+        break;
+
+        case 'f':
+        float decimal;
+        printf("\ninsira decimal:");
+        scanf("%f",&decimal);
+        limpa_buffer();
+        dado = &decimal;
+        break;
+
+        case 'c':
+        char caractere;
+        printf("\n insira um caractere:");
+        scanf("%c",&caractere);
+        limpa_buffer();
+        dado = &caractere;
+        break;
+
+        default:
+        exit(EXIT_FAILURE);
+    }
+
+    insere_dado_node(current, forma, dado);
+
+    if(*root == NULL){
+        torna_node_proximo(root, current);
+    }
+    else if((*root)->proximo == NULL){
+        torna_node_proximo(root, current);
+    }
+    else{
+        Node *temp = *root;
+        while(temp->proximo != NULL){
+            temp = temp->proximo;
+        }
+        torna_node_proximo(&temp,current);
+    }
+}
+
+void* dequeue(Node **root){
+    int size = tamanho_dado_node(*root);
+    void *dados = calloc(1, size);
+    memcpy(dados,(*root)->dado,size);
+    remove_head(root);
+    return dados;
+}
+
+void* front(Node **root){
+    int size = tamanho_dado_node(*root);
+    void *dados = calloc(1, size);
+    memcpy(dados,(*root)->dado,size);
+    return dados;
+}
 
 //arvores
+void insere_esquerda(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
+    }
+    else{
+        (*root)->anterior = current;
+    }
+}
+
+void insere_direita(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
+    }
+    else{
+        (*root)->proximo = current;
+    }
+}
+
+
 
 //hashtables
