@@ -11,13 +11,17 @@
     int b = 20;
 
 
-    head = cria_novo_node();
-    insere_dado_node(head,"d",&a);
-    insere_dado_node(head,"d",&b);
+    ///retorna_int_node precisa de alteraçãode parada!!!
+    //insere_node_arvore precisa de caso string caso char caso float!!!
 
-    int saida = 0;
-    saida = retorna_int_node(head,2);
-    printf("%d",saida);
+    Node *new = NULL;
+    int primo = 31;
+
+    for(int i = 0; i<5; i++){
+        Node *new = cria_novo_node();
+        primo = primo*i*i%10;
+        insere_dado_node(new, "d", &primo);
+    }
 
 
 

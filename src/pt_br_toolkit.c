@@ -169,7 +169,7 @@ void le_dado_node(Node *current){
 }
 
 void placeholder(void){
-    return; ///preciso fazer um extrator de dado int para comparar os dados na arvore.
+    return; 
 }
 
 int retorna_int_node(Node *current, int pos){
@@ -448,6 +448,48 @@ void insere_direita(Node **root, Node *current){
     }
 }
 
+void insere_node_arvore(Node **root, Node *current){
+    int data_old = 0;
+    int data_new = 0;
 
+    if(*root == NULL){
+        *root = current;
+        return;
+    }
+
+    data_old = retorna_int_node(*root, 1);
+    data_new = retorna_int_node(current, 1);
+
+    if(data_new > data_old){
+        if((*root)->proximo == NULL){
+            insere_direita(root, current);
+            return;
+        }
+        else{
+            insere_node_arvore(&(*root)->proximo,current);
+            return;
+        }
+    }
+    else if(data_new < data_old){
+        if((*root)->anterior == NULL){
+            insere_esquerda(root, current);
+            return;
+        }
+        else{
+            insere_node_arvore(&(*root)->anterior, current);
+            return;
+        }
+    }
+}
+
+void imprime_arvore(Node **root){
+    if((*root)->anterior != NULL){
+        imprime_arvore(&(*root)->anterior);
+    }
+    printf("valor do dado : %d", retorna_int_node(*root,1));
+    if((*root)->proximo != NULL){
+        imprime_arvore(&(*root)->proximo);
+    }
+}
 
 //hashtables

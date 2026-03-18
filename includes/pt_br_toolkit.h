@@ -66,5 +66,7 @@ void* front(Node **root);
 
 //arvores
 
+void insere_node_arvore(Node **root, Node *current);
+
 
 #endif // PT_BR_TOOLKIT_H
