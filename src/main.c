@@ -11,36 +11,27 @@
     int b = 20;
 
 
-    ///retorna_int_node precisa de alteraçãode parada!!!
+    
     //insere_node_arvore precisa de caso string caso char caso float!!!
 
     Node *new = NULL;
     int primo = 31;
 
-    for(int i = 0; i<5; i++){
+    for(int i = 0; i<15; i++){
         Node *new = cria_novo_node();
-        primo = primo*i*i%10;
-        insere_dado_node(new, "d", &primo);
+        int imput;
+        scanf("%d",&imput);
+        limpa_buffer();
+        insere_dado_node(new,"d",&imput);
+        insere_node_arvore(&head,new);
     }
 
+    remove_node_arvore(&head);
+    
 
+    imprime_arvore(&head);
+    scanf("%d",&primo);
 
-    while(((char*)p)[cntrl] == 2){
-        switch(((char*)p)[cntrl + 1]){
-            case 'd':
-            printf("%d",*(int*)((char*)p + 2 + sizeof(long int) + cntrl));
-            break;
-            case 'f':
-            printf("%f",*(float*)((char*)p + 2 + sizeof(long int) + cntrl));
-            break;
-            case 'c':
-            printf("%c",((char*)p)[2+sizeof(long int) + cntrl]);
-            break;
-            case 's':
-            printf("%s",((char*)p + 2 + sizeof(long int) + cntrl));
-            break;
-        }
-        cntrl += (*(int*)((char*)p + 2+cntrl)+2+sizeof(long int));
-    }
+    
 }
 

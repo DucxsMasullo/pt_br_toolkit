@@ -448,6 +448,28 @@ void insere_direita(Node **root, Node *current){
     }
 }
 
+void remove_node_arvore(Node **root){
+    Node *left = (*root)->anterior;
+    Node *right = (*root)->proximo;
+
+    if(left == NULL){
+        if(right == NULL){
+            exit(EXIT_FAILURE);
+        }
+        else{
+            deleta_node(*root);
+            *root = right;
+        }
+    }
+    else{
+        deleta_node(*root);
+        *root = left;
+        if(right != NULL){
+            insere_node_arvore(root,right);
+        }
+    }
+}
+
 void insere_node_arvore(Node **root, Node *current){
     int data_old = 0;
     int data_new = 0;
@@ -480,13 +502,17 @@ void insere_node_arvore(Node **root, Node *current){
             return;
         }
     }
+    else{
+        deleta_node(current);
+        printf("valor repetido\n");
+    }
 }
 
 void imprime_arvore(Node **root){
     if((*root)->anterior != NULL){
         imprime_arvore(&(*root)->anterior);
     }
-    printf("valor do dado : %d", retorna_int_node(*root,1));
+    printf("valor do dado : %d\n", retorna_int_node(*root,1));
     if((*root)->proximo != NULL){
         imprime_arvore(&(*root)->proximo);
     }
