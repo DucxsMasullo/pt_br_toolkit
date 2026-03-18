@@ -168,10 +168,6 @@ void le_dado_node(Node *current){
     }
 }
 
-void placeholder(void){
-    return; 
-}
-
 int retorna_int_node(Node *current, int pos){
     if(current == NULL){
         exit(EXIT_FAILURE);
