@@ -9,7 +9,7 @@
 
 //strings
 
-static const char mapa_acentos[64] = {
+const char mapa_acentos[64] = {
     'a','a','a','a','a',0,0,'c',
     'e','e','e','e','i','i','i','i',
     0,0,'o','o','o','o','o',0,
@@ -101,13 +101,16 @@ Node* cria_novo_node(void){
         printf("\n erro ao alocar");
         exit(EXIT_FAILURE);
     }
+    newnode->altura = 1;
     return newnode;
 }
 
 void deleta_node(Node *current){
-    if(current->dado != NULL){
-        free(current->dado);
+    if(current == NULL){
+        return;
     }
+
+    free(current->dado);
     free(current);
 }
 
@@ -426,7 +429,7 @@ void* front(Node **root){
 }
 
 //arvores
-void insere_esquerda(Node **root, Node *current){
+void insere_anterior(Node **root, Node *current){
     if(*root == NULL){
         *root = current;
     }
@@ -435,7 +438,7 @@ void insere_esquerda(Node **root, Node *current){
     }
 }
 
-void insere_direita(Node **root, Node *current){
+void insere_proximo(Node **root, Node *current){
     if(*root == NULL){
         *root = current;
     }
@@ -444,25 +447,36 @@ void insere_direita(Node **root, Node *current){
     }
 }
 
-void remove_node_arvore(Node **root){
-    Node *left = (*root)->anterior;
-    Node *right = (*root)->proximo;
+Node** minimo_ptr(Node **root){
+    while((*root)->anterior != NULL){
+        root = &(*root)->anterior;
+    }
+    return root;
+}
 
-    if(left == NULL){
-        if(right == NULL){
-            exit(EXIT_FAILURE);
-        }
-        else{
-            deleta_node(*root);
-            *root = right;
-        }
+void remove_node_arvore(Node **root){
+    if(root == NULL || *root == NULL) return;
+
+    Node *node = *root;
+
+    if(node->anterior == NULL && node->proximo == NULL){
+        deleta_node(node);
+        *root = NULL;
+    }
+    else if(node->anterior == NULL){
+        *root = node->proximo;
+        deleta_node(node);
+    }
+    else if(node->proximo == NULL){
+        *root = node->anterior;
+        deleta_node(node);
     }
     else{
-        deleta_node(*root);
-        *root = left;
-        if(right != NULL){
-            insere_node_arvore(root,right);
-        }
+        Node **succ_ptr = minimo_ptr(&(node->proximo));
+        void *temp = node->dado;
+        node->dado = (*succ_ptr)->dado;
+        (*succ_ptr)->dado = temp;
+        remove_node_arvore(succ_ptr);
     }
 }
 
@@ -480,7 +494,7 @@ void insere_node_arvore(Node **root, Node *current){
 
     if(data_new > data_old){
         if((*root)->proximo == NULL){
-            insere_direita(root, current);
+            insere_proximo(root, current);
             return;
         }
         else{
@@ -490,7 +504,7 @@ void insere_node_arvore(Node **root, Node *current){
     }
     else if(data_new < data_old){
         if((*root)->anterior == NULL){
-            insere_esquerda(root, current);
+            insere_anterior(root, current);
             return;
         }
         else{
@@ -511,6 +525,107 @@ void imprime_arvore(Node **root){
     printf("valor do dado : %d\n", retorna_int_node(*root,1));
     if((*root)->proximo != NULL){
         imprime_arvore(&(*root)->proximo);
+    }
+}
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+void attdados(Node *root){
+int leftHeight  = root->anterior ? root->anterior->altura : 0;
+int rightHeight = root->proximo  ? root->proximo->altura  : 0;
+
+root->altura = max(leftHeight, rightHeight) + 1;
+root->fator = leftHeight - rightHeight;
+}
+
+void rr(Node **root){
+    Node *newroot = (*root)->proximo;
+            (*root)->proximo = newroot->anterior;
+            newroot->anterior = *root;
+
+            attdados(*root);
+            attdados(newroot);
+
+            *root = newroot;
+}
+
+void ll(Node **root) {
+    Node *newRoot = (*root)->anterior;
+    (*root)->anterior = newRoot->proximo;
+    newRoot->proximo = *root;
+
+    attdados(*root);
+    attdados(newRoot);
+
+    *root = newRoot;
+}
+
+void rl(Node **root){
+    ll(&(*root)->proximo);
+    rr(root);
+}
+
+void lr(Node **root){
+    rr(&(*root)->anterior);
+    ll(root);
+}
+
+void balancear_node(Node **root){
+    if((*root)->fator == -2){
+        if((*root)->proximo->fator <= 0){
+            rr(root);
+        }
+        else if((*root)->proximo->fator > 0){
+            rl(root);
+        }
+    }
+    else if ((*root)->fator == 2){
+        if((*root)->anterior->fator >= 0){
+            ll(root);
+        }
+        else if((*root)->anterior->fator <0){
+            lr(root);
+        }
+    }
+}
+
+
+void insere_node_arvore_balanceada(Node **root, Node *current){
+    if(*root == NULL){
+        *root = current;
+        return;
+    }
+
+    int a = retorna_int_node(*root,1);
+    int b = retorna_int_node(current,1);
+
+    if(a==b){
+        deleta_node(current);
+        return;
+    }
+
+    if(b<a){
+        if((*root)->anterior == NULL){
+            (*root)->anterior = current;
+        }
+        else{
+            insere_node_arvore_balanceada(&(*root)->anterior, current);
+        }
+    }
+    else{
+        if((*root)->proximo == NULL){
+            (*root)->proximo = current;
+        }
+        else{
+            insere_node_arvore_balanceada(&(*root)->proximo, current);
+        }
+    }
+    
+    attdados(*root);
+    if((*root)->fator < -1 || (*root)->fator >1){
+        balancear_node(root);
     }
 }
 
